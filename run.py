@@ -34,7 +34,7 @@ def index_files():
             ext = filename[-4:]
             filename = filename[:-4]
             if ext == '.mp4' or ext == '.m4v':
-                FileModel.get_or_create(filepath=f, filename=filename, extension=ext)
+                FileModel.get_or_create(filepath=f, extension=ext)
                 all_movies.append(Movie(f, filename))
 
     return all_movies
