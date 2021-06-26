@@ -72,7 +72,7 @@ def play():
     vtt = f'{vtt}.vtt'
     query = FileModel.select().where(FileModel.filepath == vtt)
     if query.exists():
-        print('Have subs')
+        return render_template('play.html', movie=urllib.parse.unquote(movie), sub=vtt)
     return render_template('play.html', movie=urllib.parse.unquote(movie))
 
 @app.route("/test")
