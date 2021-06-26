@@ -69,7 +69,7 @@ def play():
     movie = urllib.parse.unquote(movie)
     print(movie)
     vtt = movie[:-4]
-    vtt = f'{movie}.vtt'
+    vtt = f'{vtt}.vtt'
     query = FileModel.select().where(FileModel.filepath == vtt)
     if query.exists():
         print('Have subs')
