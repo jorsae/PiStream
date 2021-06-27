@@ -61,7 +61,7 @@ def get_movies(root):
 @app.route("/")
 def index():
     movies = FileModel.select().where(FileModel.extension != '.vtt')
-    return render_template('index.html', movies_len=len(movies), movies=movies)
+    return render_template('index.html', movies_len=len(movies), movies=movies.filepath)
 
 @app.route("/play")
 def play():
