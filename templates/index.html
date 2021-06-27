@@ -5,7 +5,9 @@
     <meta charset="utf-8"
 </head>
 <body>
-  
+{% include "static/menu.html" %}
+
+
 <ol>
 {%for i in range(0, movies_len)%}
     <li>
@@ -15,4 +17,6 @@
 </ol>
 
 </body>
+
+{% include "static/footer.html" %}
 </html>

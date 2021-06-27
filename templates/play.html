@@ -1,4 +1,8 @@
+{% include "static/menu.html" %}
+
 <video controls>
     <source src="{{ movie }}" type="video/mp4">
     <track label="English" kind="subtitles" srclang="en" src="{{ sub }}" default>
 </video>
+
+{% include "static/footer.html" %}
