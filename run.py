@@ -16,10 +16,11 @@ def setup_database():
 
 def main():
     setup_database()
-    index_files()
     app.run(host='0.0.0.0', port=3000)
 
 def index_files():
+    FileModel.delete().execute()
+
     allFiles = []
     walk = [args.folder]
     while walk:
@@ -37,9 +38,22 @@ def index_files():
 @app.route("/")
 def index():
     movies = FileModel.select().where(FileModel.extension != '.vtt')
-    print(movies[0])
-    print(movies[0].filepath)
-    return render_template('index.html', movies_len=len(movies), movies=movies)
+    print(len(movies))
+    return render_template('index.html', movies=movies)
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    output = ''
+    if request.method == "GET":
+        print("get")
+    else:
+        reindex = request.form.get('reindex')
+        if reindex:
+            print('TODO: Reindex database')
+            index_files()
+        print("post")
+
+    return render_template("admin.html", output=output)
 
 @app.route("/play")
 def play():
