@@ -1,6 +1,6 @@
 from peewee import *
 
-database = SqliteDatabase('PiStream-db.sql')
+database = SqliteDatabase('PiStream.sql')
 
 class BaseModel(Model):
     class Meta:

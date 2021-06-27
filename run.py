@@ -1,7 +1,6 @@
 import argparse
 from flask import Flask, Markup, render_template, request, send_file
 import os
-from movie import Movie
 from glob import glob
 import urllib.parse
 from model import database, FileModel
@@ -21,7 +20,6 @@ def main():
     app.run(host='0.0.0.0', port=3000)
 
 def index_files():
-    all_movies = []
     allFiles = []
     walk = [args.folder]
     while walk:
@@ -34,29 +32,7 @@ def index_files():
             ext = filename[-4:]
             filename = filename[:-4]
             if ext == '.mp4' or ext == '.m4v' or ext == '.vtt':
-                FileModel.get_or_create(filepath=f, extension=ext)
-                all_movies.append(Movie(f, filename))
-
-    return all_movies
-
-def get_movies(root):
-    all_movies = []
-    allFiles = []
-    walk = [root]
-    while walk:
-        folder = walk.pop(0) + "/"
-        files = os.listdir(folder) # items = folders + files
-        for f in files:
-            f = folder + f
-            (walk if os.path.isdir(f) else allFiles).append(f)
-            filename = os.path.basename(f)
-            ext = filename[-4:]
-            print(folder)
-            if ext == '.mp4' or ext == '.m4v' or ext == '.vtt':
-                print(f)
-                all_movies.append(Movie(f, filename))
-
-    return all_movies
+                FileModel.get_or_create(filepath=f, filename=filename, extension=ext)
 
 @app.route("/")
 def index():
