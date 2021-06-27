@@ -19,6 +19,9 @@ def main():
     app.run(host='0.0.0.0', port=3000)
 
 def index_files():
+    movies = 0
+    subs = 0
+
     FileModel.delete().execute()
 
     allFiles = []
@@ -32,8 +35,13 @@ def index_files():
             filename = os.path.basename(f)
             ext = filename[-4:]
             filename = filename[:-4]
-            if ext == '.mp4' or ext == '.m4v' or ext == '.vtt':
+            if ext == '.mp4' or ext == '.m4v':
                 FileModel.get_or_create(filepath=f, filename=filename, extension=ext)
+                movies += 1
+            elif ext == '.vtt':
+                FileModel.get_or_create(filepath=f, filename=filename, extension=ext)
+                subs += 1
+    return movies, subs
 
 @app.route("/")
 def index():
@@ -44,14 +52,11 @@ def index():
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     output = ''
-    if request.method == "GET":
-        print("get")
-    else:
+    if request.method == "POST":
         reindex = request.form.get('reindex')
         if reindex:
-            print('TODO: Reindex database')
-            index_files()
-        print("post")
+            movies, subs = index_files()
+            output = f'Indexed {movies} movies, with {subs} subtitles.'
 
     return render_template("admin.html", output=output)
 
@@ -59,7 +64,6 @@ def admin():
 def play():
     movie = request.args.get('movie')
     movie = urllib.parse.unquote(movie)
-    print(movie)
     vtt = movie[:-4]
     vtt = f'{vtt}.vtt'
     query = FileModel.select().where(FileModel.filepath == vtt)
