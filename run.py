@@ -62,6 +62,7 @@ def admin():
 
 @app.route("/play")
 def play():
+    # TODO: Get movie details and subtitles from db
     movie = request.args.get('movie')
     movie = urllib.parse.unquote(movie)
     vtt = movie[:-4]
