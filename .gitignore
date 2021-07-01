@@ -1,4 +1,5 @@
 # CUSTOM
+stream/*
 *.sql
 static/*
 
