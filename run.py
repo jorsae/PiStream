@@ -30,6 +30,7 @@ def index_files():
         folder = walk.pop(0) + "/"
         files = os.listdir(folder) # items = folders + files
         for f in files:
+            print(f'{f} | {folder}')
             f = folder + f
             (walk if os.path.isdir(f) else allFiles).append(f)
             filename = os.path.basename(f)
