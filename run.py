@@ -12,7 +12,7 @@ args = parser.parse_args()
 app = Flask(__name__, static_folder=args.folder)
 
 def setup_database():
-    database.create_tables([FileModel])
+    database.create_tables([FileModel, GenreModel])
 
 def main():
     setup_database()
