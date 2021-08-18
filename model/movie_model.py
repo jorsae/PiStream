@@ -1,8 +1,9 @@
 from peewee import *
 from model import BaseModel
 
-class FileModel(BaseModel):
+class MovieModel(BaseModel):
     file_id = AutoField()
+    showname = TextField()
     filepath = TextField()
     filename = TextField()
     extension = TextField()

@@ -3,7 +3,9 @@ from flask import Flask, Markup, render_template, request, send_file
 import os
 from glob import glob
 import urllib.parse
-from model import database, FileModel
+
+import constants
+from model import *
 
 
 parser = argparse.ArgumentParser()
@@ -12,7 +14,7 @@ args = parser.parse_args()
 app = Flask(__name__, static_folder=args.folder)
 
 def setup_database():
-    database.create_tables([FileModel, GenreModel])
+    database.create_tables([MovieModel, GenreModel, SubtitleModel])
 
 def main():
     setup_database()
@@ -22,7 +24,7 @@ def index_files():
     movies = 0
     subs = 0
 
-    FileModel.delete().execute()
+    MovieModel.delete().execute()
 
     allFiles = []
     walk = [args.folder]
@@ -36,17 +38,18 @@ def index_files():
             filename = os.path.basename(f)
             ext = filename[-4:]
             filename = filename[:-4]
-            if ext == '.mp4' or ext == '.m4v':
-                FileModel.get_or_create(filepath=f, filename=filename, extension=ext)
+            if ext in constants.VIDEO_FORMATS:
+                MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
                 movies += 1
-            elif ext == '.vtt':
-                FileModel.get_or_create(filepath=f, filename=filename, extension=ext)
+            elif ext in constants.SUBTITLE_FORMATS:
+                MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
+                # SubtitleModel.get_or_create()
                 subs += 1
     return movies, subs
 
 @app.route("/")
 def index():
-    movies = FileModel.select().where(FileModel.extension != '.vtt')
+    movies = MovieModel.select().where(MovieModel.extension != '.vtt')
     print(len(movies))
     return render_template('index.html', movies=movies)
 
@@ -68,7 +71,7 @@ def play():
     movie = urllib.parse.unquote(movie)
     vtt = movie[:-4]
     vtt = f'{vtt}.vtt'
-    query = FileModel.select().where(FileModel.filepath == vtt)
+    query = MovieModel.select().where(MovieModel.filepath == vtt)
     if query.exists():
         return render_template('play.html', movie=urllib.parse.unquote(movie), sub=vtt)
     return render_template('play.html', movie=urllib.parse.unquote(movie))
