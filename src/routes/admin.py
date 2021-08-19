@@ -3,10 +3,10 @@ from flask import request, render_template
 
 import utility
 
-@app.route("/admin", methods=["GET", "POST"])
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     output = ''
-    if request.method == "POST":
+    if request.method == 'POST':
         update = request.form.get('update')
         if update:
             movies, subs = utility.index_files(app.static_folder)
@@ -17,3 +17,7 @@ def admin():
             output = f'Deleted: {movies} movies, with {subs} subtitles.'
 
     return render_template("admin.html", output=output)
+
+@app.route('/genre', methods=['GET', 'POST'])
+def genre():
+    return 'genre'

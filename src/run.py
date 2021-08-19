@@ -9,7 +9,7 @@ import constants
 from model import *
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--folder', '-f', type=str, default='../Shows', help="Folder for mp4/mkv files")
+parser.add_argument('--folder', '-f', type=str, default='../Shows', help='Folder for mp4/mkv files')
 args = parser.parse_args()
 app = Flask(__name__, static_folder=args.folder)
 
@@ -31,13 +31,12 @@ def main():
     setup_database()
     app.run(host='0.0.0.0', port=3000)
 
-@app.route("/")
+@app.route('/')
 def index():
     movies = MovieModel.select().where(MovieModel.extension != '.vtt')
-    print(len(movies))
     return render_template('index.html', movies=movies)
 
-@app.route("/play")
+@app.route('/play')
 def play():
     request_path = request.args.get('movie')
     request_path = urllib.parse.unquote(request_path)
