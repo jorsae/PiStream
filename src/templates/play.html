@@ -5,13 +5,15 @@
 <body>
 {% include "static/menu.html" %}
 
-<p>{{ movie }}</p>
+
+<h2>{{ movie }}</h2>
+
 {% if previous %}
-    <a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
+<a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
 {% endif %}
 
 {% if next %}
-    <a href={{ url_for("play", v=next.uuid) }}>Next</a>
+<a href={{ url_for("play", v=next.uuid) }}>Next</a>
 {% endif %}
 
 <div class="video-container">
