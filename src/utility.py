@@ -2,17 +2,16 @@ import os
 import logging
 
 from model import *
+import query
+import constants
 
 # Purge and index all files anew
-def index_files():
+def index_files(start_folder):
     movies = 0
     subs = 0
 
-    MovieModel.delete().execute()
-    SubtitleModel.delete().execute()
-
     allFiles = []
-    walk = [args.folder]
+    walk = [start_folder]
     while walk:
         folder = walk.pop(0) + "/"
         files = os.listdir(folder) # items = folders + files
@@ -22,15 +21,19 @@ def index_files():
             filename = os.path.basename(f)
             ext = filename[-4:]
             filename = filename[:-4]
+            
+
             if ext in constants.VIDEO_FORMATS:
-                MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
-                movies += 1
+                m, created = MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
+                if created:
+                    movies += 1
             elif ext in constants.SUBTITLE_FORMATS:
                 try:
                     mm = MovieModel.select().where(MovieModel.filename==filename)
                     if mm is not None:
-                        SubtitleModel.get_or_create(filepath=f, extension=ext, movie_id=mm[0].movie_id)
+                        sub, created = SubtitleModel.get_or_create(filepath=f, extension=ext, movie_id=mm[0].movie_id)
+                        if created:
+                            subs += 1
                 except Exception as e:
                     logging.error(e)
-                subs += 1
     return movies, subs
