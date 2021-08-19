@@ -39,9 +39,22 @@ def index_files(start_folder):
                     logging.error(e)
     return movies, subs
 
+# Delete all tables
 def purge_database():
     movies = MovieModel.select(fn.COUNT(MovieModel)).scalar()
     subs = SubtitleModel.select(fn.COUNT(SubtitleModel)).scalar()
     MovieModel.delete().execute()
     SubtitleModel.delete().execute()
+    GenreModel.delete().execute()
+    GenreMovieModel.delete().execute()
     return movies, subs
+
+# Get all genres for movie, based on movie_id
+def get_movie_genres(movie_id):
+    genres = GenreMovieModel.select().where(GenreMovieModel.movie_id == movie_id)
+    g = []
+    for genre in genres:
+        gg = GenreModel.select(GenreModel.genre).where(GenreModel.genre_id == genre.genre_id)
+        if len(gg) > 0:
+            g.append(gg[0].genre)
+    return g

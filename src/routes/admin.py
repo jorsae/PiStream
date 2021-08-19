@@ -22,7 +22,14 @@ def admin():
 
 @app.route('/genre', methods=['GET', 'POST'])
 def genre():
+    UiMovies = []
     movies = MovieModel.select().where(MovieModel.extension != '.vtt')
+    for movie in movies:
+        genres = utility.get_movie_genres(movie.movie_id)
+        if len(genres) > 0:
+            print(genres)
+        UiMovies.append(UiMovie(movie.filename, movie.uuid, str(genres)))
+    
     genres = GenreModel.select()
 
     output = ''
@@ -48,4 +55,4 @@ def genre():
                 else:
                     output = f"Failed to add genre: '{genre}'"
 
-    return render_template("genre.html", output=output, movies=movies, genres=genres)
+    return render_template("genre.html", output=output, movies=UiMovies, genres=genres)

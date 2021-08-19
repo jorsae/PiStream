@@ -13,10 +13,10 @@
 </form>
 
 {% if movies %}
-    <ol>
+    <ol name="movie-list">
     {% for movie in movies %}
         <li>
-            {{ movie.filename }}
+            {{ movie.filename }} {{ movie.genre }}
             {% if genres %}
                 <form action="#" method="post">
                     <select name="genre_id" id={{ movie.uuid }}>

@@ -6,6 +6,7 @@ import urllib.parse
 import logging
 
 import constants
+import utility
 from model import *
 
 parser = argparse.ArgumentParser()
@@ -14,7 +15,7 @@ args = parser.parse_args()
 constants.STATIC_FOLDER = args.folder
 app = Flask(__name__, static_folder=constants.STATIC_FOLDER)
 
-from routes import *
+from routes import admin
 
 def setup_logging():
     logFolder = '../logs'
@@ -34,8 +35,15 @@ def main():
 
 @app.route('/')
 def index():
+    UiMovies = []
     movies = MovieModel.select().where(MovieModel.extension != '.vtt')
-    return render_template('index.html', movies=movies)
+    for movie in movies:
+        genres = utility.get_movie_genres(movie.movie_id)
+        if len(genres) > 0:
+            print(genres)
+        UiMovies.append(UiMovie(movie.filename, movie.uuid, str(genres)))
+    
+    return render_template('index.html', movies=UiMovies)
 
 @app.route('/play')
 def play():
