@@ -1,5 +1,9 @@
 # CUSTOM
 stream/*
+src/stream/*
+*.mp4
+*.m4v
+*.vtt
 *.sql
 static/*
 
