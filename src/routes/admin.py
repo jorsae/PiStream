@@ -3,6 +3,7 @@ from flask import request, render_template
 
 import constants
 import utility
+from model import *
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -22,4 +23,13 @@ def admin():
 @app.route('/genre', methods=['GET', 'POST'])
 def genre():
     output = ''
+    if request.method == 'POST':
+        genre = request.form.get('genre')
+        if genre:
+            genre_id, created = GenreModel.get_or_create(genre=genre)
+            if created:
+                output = f"Added genre: '{genre}'"
+            else:
+                output = f"Failed to add genre: '{genre}'"
+
     return render_template("genre.html", output=output)

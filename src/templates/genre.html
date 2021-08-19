@@ -5,7 +5,12 @@
 
 {% include "static/menu.html" %}
 
+<p>{{ output }}</p>
 
+<form action="#" method="post">
+    <input type="text" name="genre" placeholder="Genre" />
+    <input type="submit" value="Add genre" />
+</form>
 
 {% if movies %}
     <ol>
