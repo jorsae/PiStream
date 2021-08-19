@@ -1,24 +1,33 @@
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body{
-            background-color: #323232;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            color: #d7dadc;
-        }
-        a{
-            color: gold;
-        }
-        a:visited{
-            color: white;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body{
+        background-color: #323232;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        color: #d7dadc;
+    }
+    a, a:hover{
+        color: rgba(255, 217, 0, 0.521);
+    }
+    a:visited{
+        color: white;
+    }
+    h2{
+        margin: 0px;
+        margin-top: 4px;
+    }
 
-        video {
-            max-width: 70%; 
-            max-height: 70%; 
-        }
+    .video-container{
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        height: auto !important;
+        margin: auto;
+    }
 
-
-    </style>
-</head>
+    .video-menu{
+        margin: 8px;
+        display: flex;
+        justify-content: space-around;
+    }
+</style>

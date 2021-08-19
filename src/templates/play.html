@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html>
-{% include "static/head.html" %}
+<head>
+    {% include "static/head.html" %}
+</head>
 <body>
 {% include "static/menu.html" %}
 
 
 <h2>{{ movie }}</h2>
 
-{% if previous %}
-<a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
-{% endif %}
-
-{% if next %}
-<a href={{ url_for("play", v=next.uuid) }}>Next</a>
-{% endif %}
 
 <div class="video-container">
-    <video id="video-player" controls>
+    <div class="video-menu">
+        {% if previous %}
+        <a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
+        {% endif %}
+        
+        {% if next %}
+        <a href={{ url_for("play", v=next.uuid) }}>Next</a>
+        {% endif %}
+    </div>
+
+    <video class="video-player" controls>
         <source src="{{ movie }}" type="video/mp4">
         {% if sub %}
         <track label="{{ sub.language }}" srclang="{{ sub.srclang }}" kind="subtitles" src="{{ sub.filepath }}" default>
         {% endif %}
     </video>
 </div>
-
-{% include "static/footer.html" %}
 </body>
 </html>

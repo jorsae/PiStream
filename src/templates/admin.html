@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-{% include "static/head.html" %}
+<head>
+    {% include "static/head.html" %}
+</head>
 <body>
 {% include "static/menu.html" %}
 <h1>Admin</h1>
@@ -11,7 +13,5 @@
     <input type="submit" name="update" value="Update" />
     <input type="submit" name="purge" value="Purge database" />
 </form>
-
-{% include "static/footer.html" %}
 </body>
 </html>
