@@ -2,10 +2,12 @@ from peewee import *
 import os
 import uuid
 import logging
+from langdetect import detect
 
 from model import *
 import query
 import constants
+import iso639
 
 # Index all files, will add new files to database.
 def index_files(start_folder):
@@ -30,9 +32,10 @@ def index_files(start_folder):
                     movies += 1
             elif ext in constants.SUBTITLE_FORMATS:
                 try:
-                    mm = MovieModel.select().where(MovieModel.filename==filename)
-                    if mm is not None:
-                        sub, created = SubtitleModel.get_or_create(filepath=f, extension=ext, movie_id=mm[0].movie_id)
+                    movie = MovieModel.select().where(MovieModel.filename==filename)
+                    if movie is not None:
+                        iso, language = get_language_from_subtitles(f)
+                        sub, created = SubtitleModel.get_or_create(filepath=f, extension=ext, movie_id=movie[0].movie_id, srclang=iso, language=language)
                         if created:
                             subs += 1
                 except Exception as e:
@@ -58,3 +61,17 @@ def get_movie_genres(movie_id):
         if len(gg) > 0:
             g.append(gg[0].genre)
     return g
+
+def get_language_from_subtitles(f):
+    try:
+        data = open(f, 'r', encoding='utf-8').read()
+        parsed_data = ''
+        for line in data:
+            if '-->' not in line:
+                parsed_data += line
+        iso = detect(data)
+        language = iso639.translate[iso]
+        return iso, language
+    except Exception as e:
+        logging.error(e)
+        return None, None

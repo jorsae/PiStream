@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 {% include "static/head.html" %}
@@ -19,7 +18,7 @@
 <div class="video-container">
     <video id="video-player" controls>
         <source src="{{ movie }}" type="video/mp4">
-        <track label="English" kind="subtitles" srclang="en" src="{{ sub }}" default>
+        <track label="{{ sub.language }}" srclang="{{ sub.srclang }}" kind="subtitles" src="{{ sub.filepath }}" default>
     </video>
 </div>
 
