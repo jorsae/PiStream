@@ -1,7 +1,7 @@
-import argparse
-from flask import Flask, Markup, render_template, request, send_file
-import os
+from flask import Flask, render_template, request
 from glob import glob
+import argparse
+import os
 import urllib.parse
 import logging
 
@@ -25,7 +25,7 @@ def setup_logging():
     logging.basicConfig(handlers=[handler], level=logging.INFO, format='%(asctime)s %(levelname)s:[%(filename)s:%(lineno)d] %(message)s')
 
 def setup_database():
-    database.create_tables([MovieModel, GenreModel, SubtitleModel])
+    database.create_tables([MovieModel, GenreModel, SubtitleModel, GenreMovieModel])
 
 def main():
     setup_logging()

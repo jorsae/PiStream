@@ -27,12 +27,20 @@ def genre():
 
     output = ''
     if request.method == 'POST':
-        genre = request.form.get('genre')
         if request.form.get('movie_uuid'):
-            movie_genre = request.form.get('movie_genre')
+            genre_id = request.form.get('genre_id')
             movie_uuid = request.form.get('movie_uuid')
-            print(f'TODO: Add {genre} to movie: {movie_uuid}')
+            
+            movie = MovieModel.select().where(MovieModel.uuid == movie_uuid)
+            genre = GenreModel.select().where(GenreModel.genre_id == genre_id)
+            if len(movie) > 0 and len(genre) > 0:
+                gm, created = GenreMovieModel.get_or_create(movie_id=movie[0].movie_id, genre_id=genre[0].genre_id)
+                if created:
+                    output = 'Added genre to movie'
+            else:
+                output = 'Failed to add genre to movie'
         else:
+            genre = request.form.get('genre')
             if genre:
                 genre_id, created = GenreModel.get_or_create(genre=genre)
                 if created:
