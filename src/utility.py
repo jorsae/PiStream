@@ -1,3 +1,4 @@
+from peewee import *
 import os
 import logging
 
@@ -5,7 +6,7 @@ from model import *
 import query
 import constants
 
-# Purge and index all files anew
+# Index all files, will add new files to database.
 def index_files(start_folder):
     movies = 0
     subs = 0
@@ -22,7 +23,6 @@ def index_files(start_folder):
             ext = filename[-4:]
             filename = filename[:-4]
             
-
             if ext in constants.VIDEO_FORMATS:
                 m, created = MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
                 if created:
@@ -36,4 +36,11 @@ def index_files(start_folder):
                             subs += 1
                 except Exception as e:
                     logging.error(e)
+    return movies, subs
+
+def purge_database():
+    movies = MovieModel.select(fn.COUNT(MovieModel)).scalar()
+    subs = SubtitleModel.select(fn.COUNT(SubtitleModel)).scalar()
+    MovieModel.delete().execute()
+    SubtitleModel.delete().execute()
     return movies, subs
