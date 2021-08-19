@@ -11,7 +11,8 @@ from model import *
 parser = argparse.ArgumentParser()
 parser.add_argument('--folder', '-f', type=str, default='../Shows', help='Folder for mp4/mkv files')
 args = parser.parse_args()
-app = Flask(__name__, static_folder=args.folder)
+constants.STATIC_FOLDER = args.folder
+app = Flask(__name__, static_folder=constants.STATIC_FOLDER)
 
 from routes import *
 

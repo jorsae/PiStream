@@ -1,6 +1,7 @@
 from __main__ import app
 from flask import request, render_template
 
+import constants
 import utility
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -9,7 +10,7 @@ def admin():
     if request.method == 'POST':
         update = request.form.get('update')
         if update:
-            movies, subs = utility.index_files(app.static_folder)
+            movies, subs = utility.index_files(constants.STATIC_FOLDER)
             output = f'Indexed: {movies} movies, with {subs} subtitles.'
         purge = request.form.get('purge')
         if purge:
@@ -20,4 +21,5 @@ def admin():
 
 @app.route('/genre', methods=['GET', 'POST'])
 def genre():
-    return 'genre'
+    output = ''
+    return render_template("genre.html", output=output)

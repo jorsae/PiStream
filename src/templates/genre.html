@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+{% include "static/head.html" %}
+<body>
+
+{% include "static/menu.html" %}
+
+
+
+{% if movies %}
+    <ol>
+    {% for movie in movies %}
+        <li>
+            <a href={{ url_for("play", movie=movie.filepath) }}>{{ movie.movie_id }}</a>
+        </li>
+    {% endfor %}
+    </ol>
+{% else %}
+    <p>No Movies. Admin need to re-index</p>
+{% endif %}
+
+{% include "static/footer.html" %}
+</body>
+</html>
