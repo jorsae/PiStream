@@ -1,0 +1,18 @@
+
+<!DOCTYPE html>
+<html>
+{% include "static/head.html" %}
+<body>
+{% include "static/menu.html" %}
+
+<p>{{ movie }}</p>
+<div class="video-container">
+    <video controls>
+        <source src="{{ movie }}" type="video/mp4">
+        <track label="English" kind="subtitles" srclang="en" src="{{ sub }}" default>
+    </video>
+</div>
+
+{% include "static/footer.html" %}
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+{% include "static/head.html" %}
+<body>
+{% include "static/menu.html" %}
+<h1>Admin</h1>
+
+<p>{{ output }}</p>
+
+<form action="#" method="post">
+    <input type="submit" name="reindex" value="Hard reset database" />
+</form>
+
+{% include "static/footer.html" %}
+</body>
+</html>
