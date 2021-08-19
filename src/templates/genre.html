@@ -16,7 +16,18 @@
     <ol>
     {% for movie in movies %}
         <li>
-            <a href={{ url_for("play", movie=movie.filepath) }}>{{ movie.movie_id }}</a>
+            {{ movie.filename }}
+            {% if genres %}
+                <form action="#" method="post">
+                    <select name="genre" id={{ movie.uuid }}>
+                        {% for genre in genres %}
+                        <option value={{ genre }}>{{ genre.genre }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="movie_uuid" value={{ movie.uuid }} />
+                    <input type="submit" name="movie_genre" value="Add" />
+                </form>
+            {% endif %}
         </li>
     {% endfor %}
     </ol>

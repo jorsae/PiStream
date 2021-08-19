@@ -22,14 +22,22 @@ def admin():
 
 @app.route('/genre', methods=['GET', 'POST'])
 def genre():
+    movies = MovieModel.select().where(MovieModel.extension != '.vtt')
+    genres = GenreModel.select()
+
     output = ''
     if request.method == 'POST':
         genre = request.form.get('genre')
-        if genre:
-            genre_id, created = GenreModel.get_or_create(genre=genre)
-            if created:
-                output = f"Added genre: '{genre}'"
-            else:
-                output = f"Failed to add genre: '{genre}'"
+        if request.form.get('movie_uuid'):
+            movie_genre = request.form.get('movie_genre')
+            movie_uuid = request.form.get('movie_uuid')
+            print(f'TODO: Add {genre} to movie: {movie_uuid}')
+        else:
+            if genre:
+                genre_id, created = GenreModel.get_or_create(genre=genre)
+                if created:
+                    output = f"Added genre: '{genre}'"
+                else:
+                    output = f"Failed to add genre: '{genre}'"
 
-    return render_template("genre.html", output=output)
+    return render_template("genre.html", output=output, movies=movies, genres=genres)
