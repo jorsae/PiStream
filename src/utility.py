@@ -39,7 +39,7 @@ def index_files(start_folder):
                         if created:
                             subs += 1
                 except Exception as e:
-                    logging.error(e)
+                    logging.error(f'{f}: {e}')
     return movies, subs
 
 # Delete all tables
