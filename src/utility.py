@@ -29,6 +29,7 @@ def index_files(start_folder):
             if ext in constants.VIDEO_FORMATS:
                 m, created = MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
                 if created:
+                    logging.info(f'Added movie: {f}')
                     movies += 1
             elif ext in constants.SUBTITLE_FORMATS:
                 try:
@@ -37,6 +38,7 @@ def index_files(start_folder):
                         iso, language = get_language_from_subtitles(f)
                         sub, created = SubtitleModel.get_or_create(filepath=f, extension=ext, movie_id=movie[0].movie_id, srclang=iso, language=language)
                         if created:
+                            logging.info(f'Added subtitles: {f}')
                             subs += 1
                 except Exception as e:
                     logging.error(f'{f}: {e}')
