@@ -10,7 +10,7 @@
     <ol>
     {% for movie in movies %}
         <li>
-            <a href={{ url_for("play", movie=movie.filepath) }}>{{ movie.filename }}</a>
+            <a href={{ url_for("play", v=movie.uuid) }}>{{ movie.filename }}</a>
         </li>
     {% endfor %}
     </ol>

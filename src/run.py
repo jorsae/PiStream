@@ -39,10 +39,9 @@ def index():
 
 @app.route('/play')
 def play():
-    request_path = request.args.get('movie')
-    request_path = urllib.parse.unquote(request_path)
+    uuid = request.args.get('v')
     try:
-        movie = MovieModel.select().where(MovieModel.filepath == request_path)
+        movie = MovieModel.select().where(MovieModel.uuid == uuid)
         subtitles = SubtitleModel.select().where(SubtitleModel.movie_id == movie[0].movie_id)
         if len(subtitles) > 0:
             return render_template('play.html', movie=movie[0].filepath, sub=subtitles[0].filepath)
