@@ -49,10 +49,23 @@ def play():
     try:
         movie = MovieModel.select().where(MovieModel.uuid == uuid)
         subtitles = SubtitleModel.select().where(SubtitleModel.movie_id == movie[0].movie_id)
-        if len(subtitles) > 0:
-            return render_template('play.html', movie=movie[0].filepath, sub=subtitles[0].filepath)
+
+        next = MovieModel.select().where(MovieModel.movie_id == (movie[0].movie_id + 1))
+        if len(next) > 0:
+            next = next[0]
         else:
-            return render_template('play.html', movie=movie[0].filepath)
+            next = None
+        previous = MovieModel.select().where(MovieModel.movie_id == (movie[0].movie_id -1))
+        if len(previous) > 0:
+            previous = previous[0]
+        else:
+            previous = None
+
+        print(next.movie_id)
+        if len(subtitles) > 0:
+            return render_template('play.html', movie=movie[0].filepath, sub=subtitles[0].filepath, next=next, previous=previous)
+        else:
+            return render_template('play.html', movie=movie[0].filepath, next=next, previous=previous)
     except Exception as e:
         logging.error(e)
     

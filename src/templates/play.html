@@ -6,8 +6,16 @@
 {% include "static/menu.html" %}
 
 <p>{{ movie }}</p>
+{% if previous %}
+    <a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
+{% endif %}
+
+{% if next %}
+    <a href={{ url_for("play", v=next.uuid) }}>Next</a>
+{% endif %}
+
 <div class="video-container">
-    <video controls>
+    <video id="video-player" controls>
         <source src="{{ movie }}" type="video/mp4">
         <track label="English" kind="subtitles" srclang="en" src="{{ sub }}" default>
     </video>
