@@ -39,8 +39,6 @@ def index():
     movies = MovieModel.select().where(MovieModel.extension != '.vtt')
     for movie in movies:
         genres = utility.get_movie_genres(movie.movie_id)
-        if len(genres) > 0:
-            print(genres)
         UiMovies.append(UiMovie(movie.filename, movie.uuid, str(genres)))
     
     return render_template('index.html', movies=UiMovies)

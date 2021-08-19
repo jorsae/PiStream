@@ -25,7 +25,7 @@ def index_files(start_folder):
             filename = filename[:-4]
             
             if ext in constants.VIDEO_FORMATS:
-                m, created = MovieModel.get_or_create(filepath=f, uuid=str(uuid.uuid4()), showname=filename, filename=filename, extension=ext)
+                m, created = MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
                 if created:
                     movies += 1
             elif ext in constants.SUBTITLE_FORMATS:
