@@ -3,6 +3,7 @@ from flask import Flask, Markup, render_template, request, send_file
 import os
 from glob import glob
 import urllib.parse
+import logging
 
 import constants
 from model import *
@@ -25,6 +26,7 @@ def index_files():
     subs = 0
 
     MovieModel.delete().execute()
+    SubtitleModel.delete().execute()
 
     allFiles = []
     walk = [args.folder]
@@ -42,8 +44,16 @@ def index_files():
                 MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
                 movies += 1
             elif ext in constants.SUBTITLE_FORMATS:
-                MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
-                # SubtitleModel.get_or_create()
+                print(f'{filename=}')
+                try:
+                    mm = MovieModel.select().where(MovieModel.filename==filename)
+                    print(mm[0].movie_id)
+                    if mm is not None:
+                        print('Added subtitle')
+                        SubtitleModel.get_or_create(filepath=f, extension=ext, movie_id=mm[0].movie_id)
+                except Exception as e:
+                    print(f'except: {e}')
+                    pass
                 subs += 1
     return movies, subs
 
@@ -66,16 +76,18 @@ def admin():
 
 @app.route("/play")
 def play():
-    # TODO: Get movie details and subtitles from db
-    movie = request.args.get('movie')
-    movie = urllib.parse.unquote(movie)
-    vtt = movie[:-4]
-    vtt = f'{vtt}.vtt'
-    query = MovieModel.select().where(MovieModel.filepath == vtt)
-    if query.exists():
-        return render_template('play.html', movie=urllib.parse.unquote(movie), sub=vtt)
-    return render_template('play.html', movie=urllib.parse.unquote(movie))
-
+    request_path = request.args.get('movie')
+    request_path = urllib.parse.unquote(request_path)
+    try:
+        movie = MovieModel.select().where(MovieModel.filepath == request_path)
+        subtitles = SubtitleModel.select().where(SubtitleModel.movie_id == movie[0].movie_id)
+        if len(subtitles) > 0:
+            return render_template('play.html', movie=movie[0].filepath, sub=subtitles[0].filepath)
+        else:
+            return render_template('play.html', movie=movie[0].filepath)
+    except Exception as e:
+        logging.error(e)
+    
 @app.route("/test")
 def test():
     return render_template('test.html')
