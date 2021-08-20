@@ -34,13 +34,14 @@ def index_files(start_folder):
             elif ext in constants.SUBTITLE_FORMATS:
                 try:
                     movie = MovieModel.select().where(MovieModel.filename==filename)
-                    if movie is not None:
+                    if len(movie) > 0:
                         iso, language = get_language_from_subtitles(f)
                         sub, created = SubtitleModel.get_or_create(filepath=f, extension=ext, movie_id=movie[0].movie_id, srclang=iso, language=language)
                         if created:
                             logging.info(f'Added subtitles: {f}')
                             subs += 1
                 except Exception as e:
+                    input()
                     logging.error(f'{f}: {e}')
     return movies, subs
 
@@ -66,7 +67,7 @@ def get_movie_genres(movie_id):
 
 def get_language_from_subtitles(f):
     try:
-        data = open(f, 'r', encoding='utf-8').read()
+        data = open(f, 'r', encoding='iso_8859_1').read()
         parsed_data = ''
         for line in data:
             if '-->' not in line:
