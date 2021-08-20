@@ -33,15 +33,33 @@ def main():
     setup_database()
     app.run(host='0.0.0.0', port=3000)
 
-@app.route('/')
-def index():
+@app.route('/', defaults={'page': 1})
+@app.route('/<int:page>')
+def index(page):
+    movies = (MovieModel
+                .select()
+                .paginate(page, constants.MAX_VIDEO_RESULTS)
+            )
+    print(f'{page=}\t{len(movies)=}')
     UiMovies = []
-    movies = MovieModel.select().where(MovieModel.extension != '.vtt')
     for movie in movies:
         genres = utility.get_movie_genres(movie.movie_id)
         UiMovies.append(UiMovie(movie.filename, movie.uuid, str(genres)))
     
     return render_template('index.html', movies=UiMovies)
+
+@app.route('/test/<search>')
+def search(search):
+    print(search)
+    movies = (MovieModel
+                .select()
+                .where(MovieModel.showname.contains(search))
+            )
+    print(len(movies))
+    o = ''
+    for m in movies:
+        o += f'{m.filename}<br>'
+    return f'{search=}<br>{o}'
 
 @app.route('/play')
 def play():
