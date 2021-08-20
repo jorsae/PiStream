@@ -8,7 +8,7 @@
     function getRequest(url, callback) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4 && this.status === 200) {
                 callback(xhttp);
             }
         }
@@ -17,14 +17,30 @@
     }
 
     function searchUpdate(e){
-        console.log(e.target.value);
         url = "http://localhost:3000/search?search=" + e.target.value;
         getRequest(url, searchResult);
     }
 
     function searchResult(response){
-        console.log('searchresult');
-        console.log(response.responseText);
+        const movieList = document.getElementById("movieList");
+        movieList.innerHTML = "";
+
+        var movies = JSON.parse(response.responseText);
+        
+        for(var i = 0; i <= movies.length; i++){
+            list = createListElement(movies[i]);
+            movieList.append(list);
+        }
+    }
+
+    function createListElement(movie){
+        var a = document.createElement("a");
+        a.href = "/play?v=" + movie.uuid;
+        a.appendChild(document.createTextNode(movie.filename));
+        
+        var li = document.createElement("li");
+        li.append(a);
+        return li;
     }
 
     function init(){

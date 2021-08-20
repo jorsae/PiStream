@@ -10,7 +10,7 @@
 <input id="search" name="search" type="text" placeholder="search"/>
 
 {% if movies %}
-    <ol>
+    <ol id="movieList">
     {% for movie in movies %}
         <li>
             <a href={{ url_for("play", v=movie.uuid) }}>{{ movie.filename }} {{ movie.genre }}</a>
