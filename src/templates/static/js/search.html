@@ -4,22 +4,31 @@
         * Sends http GET request to given url and callbacks on a given callback
         * @param {string} url
         * @param {function} callback
-        * @param {bool} async if the request should be asynchronous or not
     */
-    function getRequest(url, callback, async = true) {
+    function getRequest(url, callback) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 callback(xhttp);
             }
         }
-        xhttp.open("GET", url, async);
+        xhttp.open("GET", url, true);
         xhttp.send()
     }
 
-    function
+    function searchUpdate(e){
+        console.log(e.target.value);
+        url = "http://localhost:3000/search?search=" + e.target.value;
+        getRequest(url, searchResult);
+    }
+
+    function searchResult(response){
+        console.log('searchresult');
+        console.log(response.responseText);
+    }
 
     function init(){
-        getRequest("http://localhost:3000/test/dss");
+        searchElement = document.getElementById("search");
+        searchElement.addEventListener('input', searchUpdate);
     }
 </script>

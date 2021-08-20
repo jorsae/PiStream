@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from glob import glob
 import argparse
 import os
+import json
 import urllib.parse
 import logging
 
@@ -48,18 +49,20 @@ def index(page):
     
     return render_template('index.html', movies=UiMovies)
 
-@app.route('/test/<search>')
-def search(search):
-    print(search)
-    movies = (MovieModel
+@app.route('/search', methods=['GET'])
+def search():
+    search = request.args.get('search')
+    print(f'{search=}')
+    query = (MovieModel
                 .select()
                 .where(MovieModel.showname.contains(search))
             )
-    print(len(movies))
     o = ''
-    for m in movies:
-        o += f'{m.filename}<br>'
-    return f'{search=}<br>{o}'
+    
+    ui_movies = []
+    for m in query:
+        ui_movies.append(UiMovie(m.filename, m.uuid, None))
+    return jsonify([m.__dict__ for m in ui_movies])
 
 @app.route('/play')
 def play():
