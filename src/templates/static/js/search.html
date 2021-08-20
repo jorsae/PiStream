@@ -1,4 +1,6 @@
 <script>
+    var keyTimer;
+
     window.onload = init;
     /**
         * Sends http GET request to given url and callbacks on a given callback
@@ -16,8 +18,13 @@
         xhttp.send()
     }
 
-    function searchUpdate(e){
-        url = "http://" + window.location.hostname + ":3000/search?search=" + e.target.value;
+    function searchUpdate(){
+        clearTimeout(keyTimer);
+        keyTimer = setTimeout(search, 300);
+    }
+
+    function search(){
+        url = "http://" + window.location.hostname + ":3000/search?search=" + document.getElementById("search").value;
         getRequest(url, searchResult);
     }
 
