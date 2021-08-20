@@ -41,7 +41,6 @@ def index(page):
                 .select()
                 .paginate(page, constants.MAX_VIDEO_RESULTS)
             )
-    print(f'{page=}\t{len(movies)=}')
     UiMovies = []
     for movie in movies:
         genres = utility.get_movie_genres(movie.movie_id)
@@ -52,13 +51,11 @@ def index(page):
 @app.route('/search', methods=['GET'])
 def search():
     search = request.args.get('search')
-    print(f'{search=}')
     query = (MovieModel
                 .select()
                 .where(MovieModel.showname.contains(search))
             )
-    o = ''
-    
+
     ui_movies = []
     for m in query:
         ui_movies.append(UiMovie(m.filename, m.uuid, None))
