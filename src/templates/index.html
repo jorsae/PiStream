@@ -7,18 +7,20 @@
 <body>
 {% include "static/menu.html" %}
 
-<input id="search" name="search" type="text" placeholder="search"/>
+<div class="movie-list">
+    <input id="search" name="search" type="text" placeholder="search"/>
 
-{% if movies %}
-    <ol id="movieList">
-    {% for movie in movies %}
-        <li>
-            <a href={{ url_for("play", v=movie.uuid) }}>{{ movie.filename }} {{ movie.genre }}</a>
-        </li>
-    {% endfor %}
-    </ol>
-{% else %}
-    <p>No Movies. Admin need to re-index</p>
-{% endif %}
+    {% if movies %}
+        <ol id="movieList">
+        {% for movie in movies %}
+            <li>
+                <a href={{ url_for("play", v=movie.uuid) }}>{{ movie.filename }} {{ movie.genre }}</a>
+            </li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <p>No Movies. Admin need to re-index</p>
+    {% endif %}
+</div>
 </body>
 </html>

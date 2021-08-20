@@ -17,7 +17,7 @@
     }
 
     function searchUpdate(e){
-        url = "http://localhost:3000/search?search=" + e.target.value;
+        url = "http://" + window.location.hostname + ":3000/search?search=" + e.target.value;
         getRequest(url, searchResult);
     }
 
@@ -27,7 +27,7 @@
 
         var movies = JSON.parse(response.responseText);
         
-        for(var i = 0; i <= movies.length; i++){
+        for(var i = 0; i < movies.length; i++){
             list = createListElement(movies[i]);
             movieList.append(list);
         }
