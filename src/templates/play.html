@@ -2,6 +2,7 @@
 <html>
 <head>
     {% include "static/head.html" %}
+    {% include "static/css/play.html" %}
     <link href="https://vjs.zencdn.net/7.14.3/video-js.css" rel="stylesheet" />
 </head>
 <body>
@@ -11,7 +12,7 @@
 <h2>{{ movie }}</h2>
 
 <div class="video-container">
-    <div class="video-menu">
+    <!-- <div class="video-menu">
         {% if previous %}
         <a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
         {% endif %}
@@ -19,27 +20,26 @@
         {% if next %}
         <a href={{ url_for("play", v=next.uuid) }}>Next</a>
         {% endif %}
-    </div>
-
+    </div> -->
     <video id="videoPlayer" class="video-player video-js" data-setup='{"fluid": true}' controls>
         <source src="{{ movie }}" type="video/mp4">
         {% if sub %}
         <track label="{{ sub.language }}" srclang="{{ sub.srclang }}" kind="subtitles" src="{{ sub.filepath }}" default>
         {% endif %}
-
-        <div class="video-rewind-notify rewind notification">
-            <div class="rewind-icon icon">
-                <i class="left-triangle triangle">◀◀◀</i>
-                <span class="rewind">10 seconds</span>
-            </div>
-          </div>
-          <div class="video-forward-notify forward notification">
-            <div class="forward-icon icon">
-                <i class="right-triangle triangle">▶▶▶</i>
-                <span class="forward">10 seconds</span>
-            </div>
-          </div>
     </video>
+
+    <div class="video-rewind-notify rewind notification">
+        <div class="rewind-icon icon">
+            <i class="left-triangle triangle">◀◀◀</i>
+            <span class="rewind">10 seconds</span>
+        </div>
+    </div>
+    <div class="video-forward-notify forward notification">
+        <div class="forward-icon icon">
+            <i class="right-triangle triangle">▶▶▶</i>
+            <span class="forward">10 seconds</span>
+        </div>
+    </div>
 </div>
 <script>window.HELP_IMPROVE_VIDEOJS = false;</script>
 <script src="https://vjs.zencdn.net/7.14.3/video.min.js"></script>
@@ -56,19 +56,23 @@
     var tapedTwice;
 
     function animateNotificationIn(isRewinding){
+        console.log("anime notification in")
         isRewinding ? notifications[0].classList.add('animate-in') : notifications[1].classList.add('animate-in'); 
     }
 
     function animateNotificationOut(){
+        console.log("anime notification out")
         this.classList.remove('animate-in');
     }
 
     function forwardVideo(){
+        console.log("forward video");
         video.currentTime = video.currentTime + 10;
         animateNotificationIn(false);
     }
-
+    
     function rewindVideo(){
+        console.log("rewind video");
         video.currentTime = video.currentTime - 10;
         animateNotificationIn(true);
     }
