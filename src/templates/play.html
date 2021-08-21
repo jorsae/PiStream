@@ -56,23 +56,19 @@
     var tapedTwice;
 
     function animateNotificationIn(isRewinding){
-        console.log("anime notification in")
         isRewinding ? notifications[0].classList.add('animate-in') : notifications[1].classList.add('animate-in'); 
     }
 
     function animateNotificationOut(){
-        console.log("anime notification out")
         this.classList.remove('animate-in');
     }
 
     function forwardVideo(){
-        console.log("forward video");
         video.currentTime = video.currentTime + 10;
         animateNotificationIn(false);
     }
     
     function rewindVideo(){
-        console.log("rewind video");
         video.currentTime = video.currentTime - 10;
         animateNotificationIn(true);
     }
@@ -98,6 +94,18 @@
         // 'f' key
         if (event.which === 70) {
             this.isFullscreen() ? this.exitFullscreen() : this.requestFullscreen();
+        }
+        // 'm' key
+        else if(event.which === 77){
+            this.muted() ? this.muted(false) : this.muted(true);
+        }
+        // --> key
+        else if(event.which === 39){
+            forwardVideo();
+        }
+        // <-- key
+        else if(event.which == 37){
+            rewindVideo();
         }
     }
 
