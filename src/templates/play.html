@@ -54,38 +54,6 @@
     const rewindNotificationValue = document.querySelector('.video-rewind-notify span');
     
     var tapedTwice;
-    let timer;
-    let rewindSpeed = 0;
-    let forwardSpeed = 0;
-
-    //function for double click event listener on the video
-    //todo change those variable to html5 data attributes
-    function updateCurrentTime(delta){
-        let isRewinding = delta < 0;
-    if(isRewinding){
-        rewindSpeed = rewindSpeed + delta;
-        forwardSpeed = 0;
-    }else{
-        forwardSpeed = forwardSpeed + delta;
-        rewindSpeed = 0;
-    }
-
-    //clear the timeout
-    clearTimeout(timer);
-
-    let speed = (isRewinding ? rewindSpeed : forwardSpeed);
-    video.currentTime = video.currentTime + speed;
-
-    let NotificationValue =  isRewinding ? rewindNotificationValue : forwardNotificationValue ;
-    NotificationValue.innerHTML = `${Math.abs(speed)} seconds`;
-
-    //reset accumulator within 2 seconds of a double click
-    timer = setTimeout(function(){
-        rewindSpeed = 0;
-        forwardSpeed = 0;
-    }, 2000); // you can edit this delay value for the timeout, i have it set for 2 seconds
-        console.log(`updated time: ${video.currentTime}`);
-    }
 
     function animateNotificationIn(isRewinding){
         isRewinding ? notifications[0].classList.add('animate-in') : notifications[1].classList.add('animate-in'); 
@@ -96,12 +64,12 @@
     }
 
     function forwardVideo(){
-        updateCurrentTime(10);
+        video.currentTime = video.currentTime + 10;
         animateNotificationIn(false);
     }
 
     function rewindVideo(){
-        updateCurrentTime(-10);
+        video.currentTime = video.currentTime - 10;
         animateNotificationIn(true);
     }
 
@@ -120,10 +88,6 @@
         }
         const videoWidth = video.offsetWidth;
         (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
-    }
-
-    function togglePlay(){
-        video.paused ? video.play() : video.pause();
     }
 
     function hotkeysHandler(e){
