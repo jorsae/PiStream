@@ -12,7 +12,7 @@
 <h2>{{ movie }}</h2>
 
 <div class="video-container">
-    <!-- <div class="video-menu">
+    <div class="video-menu">
         {% if previous %}
         <a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
         {% endif %}
@@ -20,7 +20,7 @@
         {% if next %}
         <a href={{ url_for("play", v=next.uuid) }}>Next</a>
         {% endif %}
-    </div> -->
+    </div>
     <video id="videoPlayer" class="video-player video-js" data-setup='{"fluid": true}' controls>
         <source src="{{ movie }}" type="video/mp4">
         {% if sub %}
