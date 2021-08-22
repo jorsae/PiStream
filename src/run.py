@@ -1,9 +1,6 @@
-from flask import Flask, render_template, request, jsonify
-from glob import glob
+from flask import Flask, render_template, request
 import argparse
 import os
-import json
-import urllib.parse
 import logging
 
 import constants
@@ -33,33 +30,6 @@ def main():
     setup_logging()
     setup_database()
     app.run(host='0.0.0.0', port=3000)
-
-@app.route('/', defaults={'page': 1})
-@app.route('/<int:page>')
-def index(page):
-    movies = (MovieModel
-                .select()
-                .paginate(page, constants.MAX_VIDEO_RESULTS)
-            )
-    UiMovies = []
-    for movie in movies:
-        genres = utility.get_movie_genres(movie.movie_id)
-        UiMovies.append(UiMovie(movie.filename, movie.uuid, str(genres)))
-    
-    return render_template('index.html', movies=UiMovies)
-
-@app.route('/search', methods=['GET'])
-def search():
-    search = request.args.get('search')
-    query = (MovieModel
-                .select()
-                .where(MovieModel.showname.contains(search))
-            )
-
-    ui_movies = []
-    for m in query:
-        ui_movies.append(UiMovie(m.filename, m.uuid, None))
-    return jsonify([m.__dict__ for m in ui_movies])
 
 @app.route('/play')
 def play():

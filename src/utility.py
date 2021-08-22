@@ -1,6 +1,5 @@
 from peewee import *
 import os
-import uuid
 import logging
 from langdetect import detect
 
