@@ -3,7 +3,7 @@
     // TODO: https://codepen.io/smithsa/pen/ZmWMxy
 
     // forward/rewind
-    const video = document.getElementById('videoPlayer'); 
+    const video = document.getElementById('videoPlayer');
     const notifications = document.querySelectorAll('.notification');
     const forwardNotificationValue = document.querySelector('.video-forward-notify span');
     const rewindNotificationValue = document.querySelector('.video-rewind-notify span');
@@ -11,24 +11,33 @@
     
     // watch progress
     const uuid = "{{ movie.uuid }}";
-    const watchProgressInterval = 3000;
+    const watchProgressInterval = 5000;
     var watchProgressTimer;
+    var loadedWatchProgress = "{{ watch_progress }}";
     
     
     window.onload = init;
     function init(){
+        // Event handlers for forward/rewind animations
         video.addEventListener('touchstart', tapHandler);
         notifications.forEach(function(notification){
             notification.addEventListener('animationend', animateNotificationOut);
         });
         
-        videojs('videoPlayer', {
-            userActions: {
-                doubleClick: doubleClickHandler,
-                hotkeys: hotkeysHandler
-            }
+        var player = videojs('videoPlayer', {
+                        userActions: {
+                            doubleClick: doubleClickHandler,
+                            hotkeys: hotkeysHandler,
+                        }
+                    });
+        player.ready(function(){
+            this.on('loadedmetadata', function(){video.currentTime = video.currentTime + loadedWatchProgress;})
         });
 
+        // load watch timer
+        console.log('loadedWatchProgress: ' + loadedWatchProgress);
+
+        // Check if you need to start watch progress
         if(isNullOrWhitespace(uuid) === false){
             watchProgressTimer = setInterval(watchProgress, watchProgressInterval);
         }

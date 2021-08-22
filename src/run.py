@@ -50,10 +50,21 @@ def play():
         else:
             previous = None
         
+        watch_progress = 0
+        user_id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
+        if user_id is not None:
+            watch_progress = (WatchModel
+                                .select(WatchModel.progress)
+                                .where(
+                                    (WatchModel.movie_id == movie.movie_id) &
+                                    (WatchModel.user_id == user_id)
+                                )
+                            ).scalar()
+
         if len(subtitles) > 0:
-            return render_template('play.html', movie=movie, sub=subtitles[0], next=next, previous=previous)
+            return render_template('play.html', movie=movie, sub=subtitles[0], watch_progress=watch_progress, next=next, previous=previous)
         else:
-            return render_template('play.html', movie=movie, next=next, previous=previous)
+            return render_template('play.html', movie=movie, watch_progress=watch_progress, next=next, previous=previous)
     except Exception as e:
         logging.error(e)
         return render_template('play.html')
