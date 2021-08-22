@@ -27,7 +27,7 @@ def setup_logging():
     logging.basicConfig(handlers=[handler], level=logging.INFO, format='%(asctime)s %(levelname)s:[%(filename)s:%(lineno)d] %(message)s')
 
 def setup_database():
-    database.create_tables([MovieModel, GenreModel, SubtitleModel, GenreMovieModel])
+    database.create_tables([MovieModel, GenreModel, SubtitleModel, GenreMovieModel, UserModel])
 
 def main():
     setup_logging()
@@ -63,9 +63,6 @@ def search():
 
 @app.route('/play')
 def play():
-
-    print(request.remote_addr)
-
     uuid = request.args.get('v')
     try:
         movie = MovieModel.select().where(MovieModel.uuid == uuid)

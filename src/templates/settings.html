@@ -29,7 +29,7 @@
     <p>{{ output }}</p>
     
     <form action="#" method="post">
-        <input type="text" name="name" placeholder="Name" />
+        <input type="text" name="username" placeholder="Username" value="{{ user.username|default('', true) }}" />
         <input type="submit" value="Save" />
     </form>
 </div>
