@@ -1,0 +1,132 @@
+<script>
+    // TODO: Clean up code and add display that you skipped forward
+    // TODO: https://codepen.io/smithsa/pen/ZmWMxy
+
+    // forward/rewind
+    const video = document.getElementById('videoPlayer'); 
+    const notifications = document.querySelectorAll('.notification');
+    const forwardNotificationValue = document.querySelector('.video-forward-notify span');
+    const rewindNotificationValue = document.querySelector('.video-rewind-notify span');
+    var tapedTwice;
+    
+    // watch progress
+    const uuid = "{{ movie.uuid }}";
+    const watchProgressInterval = 3000;
+    var watchProgressTimer;
+    
+    
+    window.onload = init;
+    function init(){
+        video.addEventListener('touchstart', tapHandler);
+        notifications.forEach(function(notification){
+            notification.addEventListener('animationend', animateNotificationOut);
+        });
+        
+        videojs('videoPlayer', {
+            userActions: {
+                doubleClick: doubleClickHandler,
+                hotkeys: hotkeysHandler
+            }
+        });
+
+        if(isNullOrWhitespace(uuid) === false){
+            watchProgressTimer = setInterval(watchProgress, watchProgressInterval);
+        }
+    }
+
+    /***************************
+        Forward/Rewind functions
+    ****************************/
+    function animateNotificationIn(isRewinding){
+        isRewinding ? notifications[0].classList.add('animate-in') : notifications[1].classList.add('animate-in'); 
+    }
+
+    function animateNotificationOut(){
+        this.classList.remove('animate-in');
+    }
+
+    function forwardVideo(){
+        video.currentTime = video.currentTime + 10;
+        animateNotificationIn(false);
+    }
+    
+    function rewindVideo(){
+        video.currentTime = video.currentTime - 10;
+        animateNotificationIn(true);
+    }
+
+    //Event Handlers
+    function doubleClickHandler(e){
+        const videoWidth = video.offsetWidth;
+        (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
+        e.preventDefault();
+    }
+
+    function tapHandler(e){
+        if(!tapedTwice) {
+            tapedTwice = true;
+            setTimeout( function() { tapedTwice = false; }, 300 );
+            return false;
+        }
+        const videoWidth = video.offsetWidth;
+        (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
+    }
+
+    function hotkeysHandler(e){
+        // 'f' key
+        if (event.which === 70) {
+            this.isFullscreen() ? this.exitFullscreen() : this.requestFullscreen();
+        }
+        // 'm' key
+        else if(event.which === 77){
+            this.muted() ? this.muted(false) : this.muted(true);
+        }
+        // --> key
+        else if(event.which === 39){
+            forwardVideo();
+        }
+        // <-- key
+        else if(event.which == 37){
+            rewindVideo();
+        }
+    }
+
+    /***************************
+        Watch progress functions
+    ****************************/
+    function postRequest(url, object, callback, async = true) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                callback(xhttp);
+            }
+        }
+        xhttp.open("POST", url, async);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        if (object == null || object == undefined)
+            xhttp.send();
+        else
+            xhttp.send(object);
+    }
+
+    function isNullOrWhitespace( input ) {
+        return !input || !input.trim();
+    }
+
+    function watchProgress(){
+        // Video is declared in play.html
+        var watchData = {
+            'm': uuid,
+            'p': Math.floor(video.currentTime)
+        }
+        jsonData = JSON.stringify(watchData);
+        var url = "http://" + window.location.hostname + ":3000/watch";
+        postRequest(url, jsonData, callbackWatch);
+    }
+
+    function callbackWatch(response){
+        if(response.status !== 200){
+            clearInterval(watchProgressTimer);
+        }
+    }
+</script>

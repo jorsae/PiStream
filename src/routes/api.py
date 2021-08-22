@@ -42,11 +42,11 @@ def watch():
     user_id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
     if user_id is None:
         print('No assigned username, not tracking watch progress')
-        return
+        return '', 400
     movie_id = MovieModel.select(MovieModel.movie_id).where(MovieModel.uuid == movie_uuid).scalar()
     if movie_id is None:
         print(f'Could not find movie with uuid: {movie_uuid}')
-        return
+        return '', 400
     
     wm = (WatchModel
             .select(WatchModel.watch_id)
