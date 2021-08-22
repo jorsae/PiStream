@@ -16,7 +16,7 @@ args = parser.parse_args()
 constants.STATIC_FOLDER = args.folder
 app = Flask(__name__, static_folder=constants.STATIC_FOLDER)
 
-from routes import admin
+from routes import *
 
 def setup_logging():
     logFolder = '../logs'
@@ -63,6 +63,9 @@ def search():
 
 @app.route('/play')
 def play():
+
+    print(request.remote_addr)
+
     uuid = request.args.get('v')
     try:
         movie = MovieModel.select().where(MovieModel.uuid == uuid)
@@ -85,6 +88,7 @@ def play():
             return render_template('play.html', movie=movie[0].filepath, next=next, previous=previous)
     except Exception as e:
         logging.error(e)
+        return render_template('play.html')
     
 if __name__ == '__main__':
     main()

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include "static/head.html" %}
+    <style>
+        .settings{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: max-content;
+            height: auto;
+            margin: auto;
+        }
+
+        .settings input{
+            font-size: 1.2em;
+        }
+
+        p{
+            font-size: 1.2em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+{% include "static/menu.html" %}
+
+<div class="settings">
+    <p>{{ output }}</p>
+    
+    <form action="#" method="post">
+        <input type="text" name="name" placeholder="Name" />
+        <input type="submit" value="Save" />
+    </form>
+</div>
+
+</body>
+</html>
