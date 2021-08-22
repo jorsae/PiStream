@@ -4,6 +4,13 @@
 
     // forward/rewind
     const video = document.getElementById('videoPlayer');
+    const player = videojs('videoPlayer', {
+            userActions: {
+                doubleClick: doubleClickHandler,
+                hotkeys: hotkeysHandler,
+                touchstart: tapHandler
+            }
+        });
     const notifications = document.querySelectorAll('.notification');
     const forwardNotificationValue = document.querySelector('.video-forward-notify span');
     const rewindNotificationValue = document.querySelector('.video-rewind-notify span');
@@ -20,28 +27,16 @@
     window.onload = init;
     function init(){
         // Event handlers for forward/rewind animations
-        video.addEventListener('touchstart', tapHandler);
         notifications.forEach(function(notification){
             notification.addEventListener('animationend', animateNotificationOut);
         });
-        
-        var player = videojs('videoPlayer', {
-                        userActions: {
-                            doubleClick: doubleClickHandler,
-                            hotkeys: hotkeysHandler,
-                        }
-                    });
-        player.ready(function(){
-            this.on('loadedmetadata', function(){video.currentTime = video.currentTime + loadedWatchProgress;})
-        });
-
-        // load watch timer
-        console.log('loadedWatchProgress: ' + loadedWatchProgress);
 
         // Check if you need to start watch progress
         if(isNullOrWhitespace(uuid) === false){
             watchProgressTimer = setInterval(watchProgress, watchProgressInterval);
         }
+
+        player.currentTime(loadedWatchProgress);
     }
 
     /***************************
@@ -56,12 +51,12 @@
     }
 
     function forwardVideo(){
-        video.currentTime = video.currentTime + 10;
+        player.currentTime(player.currentTime() + 10);
         animateNotificationIn(false);
     }
     
     function rewindVideo(){
-        video.currentTime = video.currentTime - 10;
+        player.currentTime(player.currentTime() - 10);
         animateNotificationIn(true);
     }
 
@@ -124,13 +119,12 @@
     }
 
     function watchProgress(){
-        console.log(video.duration);
-        if(video.currentTime < minWatchProgress || (video.duration - video.currentTime) < minWatchProgress){
+        if(player.currentTime() < minWatchProgress || (player.duration - player.currentTime()) < minWatchProgress){
             return;
         }
         var watchData = {
             'm': uuid,
-            'p': Math.floor(video.currentTime)
+            'p': Math.floor(player.currentTime())
         }
         jsonData = JSON.stringify(watchData);
         var url = "http://" + window.location.hostname + ":3000/watch";
