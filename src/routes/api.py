@@ -38,6 +38,7 @@ def watch():
     json = request.json
     movie_uuid = json['m']
     progress = json['p']
+    total_time = json['t']
 
     user_id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
     if user_id is None:
@@ -56,9 +57,16 @@ def watch():
             )
         ).scalar()
     
+    if (total_time - progress) < constants.WATCH_PROGRESS_TIME_EDGE:
+        WatchModel.delete().where(WatchModel.watch_id == wm).execute()
+        return ''
+    
+    if progress < constants.WATCH_PROGRESS_TIME_EDGE:
+        return ''
+
     if wm is not None:
         wm = WatchModel.replace(watch_id=wm, movie_id=movie_id, user_id=user_id, progress=progress).execute()
     else:
         wm = WatchModel.replace(movie_id=movie_id, user_id=user_id, progress=progress).execute()
     
-    return 'ok'
+    return ''

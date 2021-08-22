@@ -18,7 +18,6 @@
     
     // watch progress
     const uuid = "{{ movie.uuid }}";
-    const minWatchProgress = 90;
     const watchProgressInterval = 5000;
     var watchProgressTimer;
     var loadedWatchProgress = "{{ watch_progress }}";
@@ -119,12 +118,14 @@
     }
 
     function watchProgress(){
-        if(player.currentTime() < minWatchProgress || (player.duration - player.currentTime()) < minWatchProgress){
+        if(player.paused()){
             return;
         }
+
         var watchData = {
             'm': uuid,
-            'p': Math.floor(player.currentTime())
+            'p': Math.floor(player.currentTime()),
+            't': Math.floor(player.duration())
         }
         jsonData = JSON.stringify(watchData);
         var url = "http://" + window.location.hostname + ":3000/watch";
