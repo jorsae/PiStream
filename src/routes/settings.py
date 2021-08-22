@@ -14,7 +14,11 @@ def settings():
     
     if request.method == 'GET':
         try:
-            user = UserModel.select().where(UserModel.ip == ip).get()
+            id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
+            if id is None:
+                output = 'You are not assigned a username'
+            else:
+                user = UserModel.select().where(UserModel.user_id == id)[0]
         except Exception as e:
             logging.error(e)
         return render_template("settings.html", user=user, output=output)
@@ -22,16 +26,19 @@ def settings():
     username = request.form.get('username')
     if username:
         try:
-            query = UserModel.select().where(UserModel.ip == ip)
+            user, created = UserModel.get_or_create(username=username)
+            
+            query = IpModel.select().where(IpModel.ip == ip)
             if query.exists():
-                UserModel.update(username = username).where(UserModel.ip == ip).execute()
-                output = f'Updated username to: {username}'
+                if query[0].user_id != user.user_id:
+                    IpModel.update(user_id=user.user_id).where(IpModel.ip == ip).execute()
+                    output = f'Updated username to: {username}'
             else:
-                u, created = UserModel.get_or_create(username=username, ip=ip)
+                ipm, created = IpModel.get_or_create(ip=ip, user_id=user.user_id)
                 if created:
-                    output = f'Created user: {username}'
+                    output = f'Assigned you username: {username}'
                 else:
-                    output = 'Something went wrong'
+                    output = f'Failed to assign username: {username}'
         except Exception as e:
             logging.error(e)
             output = 'Failed to save settings'
