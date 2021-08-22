@@ -6,3 +6,4 @@ from model.genremovie_model import GenreMovieModel
 from model.ui_movie import UiMovie
 from model.user_model import UserModel
 from model.ip_model import IpModel
+from model.watch_model import WatchModel

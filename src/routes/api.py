@@ -32,6 +32,19 @@ def search():
         ui_movies.append(UiMovie(m.filename, m.uuid, None))
     return jsonify([m.__dict__ for m in ui_movies])
 
-@app.route('/watch', methods=['GET', 'POST'])
+@app.route('/watch', methods=['POST'])
 def watch():
-    return 'watch'
+    ip = request.remote_addr
+    movie_uuid = request.args.get('m')
+    progress = request.args.get('p')
+
+    user_id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
+    if user_id is None:
+        print('No assigned username, not tracking watch progress')
+        return
+    movie_id = MovieModel.select(MovieModel.movie_id).where(MovieModel.uuid == movie_uuid).scalar()
+    if movie_id is None:
+        print(f'Could not find movie with uuid: {movie_uuid}')
+        return
+    
+    wm = WatchModel.replace(movie_id=movie_id, user_id=user_id, progress=progress).execute()
