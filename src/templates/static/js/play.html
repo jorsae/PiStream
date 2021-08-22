@@ -11,6 +11,7 @@
     
     // watch progress
     const uuid = "{{ movie.uuid }}";
+    const minWatchProgress = 90;
     const watchProgressInterval = 5000;
     var watchProgressTimer;
     var loadedWatchProgress = "{{ watch_progress }}";
@@ -123,7 +124,10 @@
     }
 
     function watchProgress(){
-        // Video is declared in play.html
+        console.log(video.duration);
+        if(video.currentTime < minWatchProgress || (video.duration - video.currentTime) < minWatchProgress){
+            return;
+        }
         var watchData = {
             'm': uuid,
             'p': Math.floor(video.currentTime)
