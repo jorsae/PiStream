@@ -24,7 +24,7 @@
     }
 
     function search(){
-        url = "http://" + window.location.hostname + ":3000/search?search=" + document.getElementById("search").value;
+        var url = "http://" + window.location.hostname + ":3000/search?search=" + document.getElementById("search").value;
         getRequest(url, searchResult);
     }
 

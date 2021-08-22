@@ -35,8 +35,9 @@ def search():
 @app.route('/watch', methods=['POST'])
 def watch():
     ip = request.remote_addr
-    movie_uuid = request.args.get('m')
-    progress = request.args.get('p')
+    json = request.json
+    movie_uuid = json['m']
+    progress = json['p']
 
     user_id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
     if user_id is None:
@@ -47,4 +48,17 @@ def watch():
         print(f'Could not find movie with uuid: {movie_uuid}')
         return
     
-    wm = WatchModel.replace(movie_id=movie_id, user_id=user_id, progress=progress).execute()
+    wm = (WatchModel
+            .select(WatchModel.watch_id)
+            .where(
+                (WatchModel.movie_id == movie_id) &
+                (WatchModel.user_id == user_id)
+            )
+        ).scalar()
+    
+    if wm is not None:
+        wm = WatchModel.replace(watch_id=wm, movie_id=movie_id, user_id=user_id, progress=progress).execute()
+    else:
+        wm = WatchModel.replace(movie_id=movie_id, user_id=user_id, progress=progress).execute()
+    
+    return 'ok'

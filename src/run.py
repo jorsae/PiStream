@@ -33,26 +33,27 @@ def main():
 
 @app.route('/play')
 def play():
+    ip = request.remote_addr
     uuid = request.args.get('v')
     try:
-        movie = MovieModel.select().where(MovieModel.uuid == uuid)
-        subtitles = SubtitleModel.select().where(SubtitleModel.movie_id == movie[0].movie_id)
+        movie = MovieModel.select().where(MovieModel.uuid == uuid)[0]
+        subtitles = SubtitleModel.select().where(SubtitleModel.movie_id == movie.movie_id)
 
-        next = MovieModel.select().where(MovieModel.movie_id == (movie[0].movie_id + 1))
+        next = MovieModel.select().where(MovieModel.movie_id == (movie.movie_id + 1))
         if len(next) > 0:
             next = next[0]
         else:
             next = None
-        previous = MovieModel.select().where(MovieModel.movie_id == (movie[0].movie_id -1))
+        previous = MovieModel.select().where(MovieModel.movie_id == (movie.movie_id -1))
         if len(previous) > 0:
             previous = previous[0]
         else:
             previous = None
-
+        
         if len(subtitles) > 0:
-            return render_template('play.html', movie=movie[0].filepath, sub=subtitles[0], next=next, previous=previous)
+            return render_template('play.html', movie=movie, sub=subtitles[0], next=next, previous=previous)
         else:
-            return render_template('play.html', movie=movie[0].filepath, next=next, previous=previous)
+            return render_template('play.html', movie=movie, next=next, previous=previous)
     except Exception as e:
         logging.error(e)
         return render_template('play.html')

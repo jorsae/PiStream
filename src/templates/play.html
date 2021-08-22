@@ -9,7 +9,7 @@
 {% include "static/menu.html" %}
 
 
-<h2>{{ movie }}</h2>
+<h2>{{ movie.filename }}</h2>
 
 <div class="video-container">
     <div class="video-menu">
@@ -22,7 +22,7 @@
         {% endif %}
     </div>
     <video id="videoPlayer" class="video-player video-js" data-setup='{"fluid": true}' controls>
-        <source src="{{ movie }}" type="video/mp4">
+        <source src="{{ movie.filepath }}" type="video/mp4">
         {% if sub %}
         <track label="{{ sub.language }}" srclang="{{ sub.srclang }}" kind="subtitles" src="{{ sub.filepath }}" default>
         {% endif %}
@@ -121,5 +121,7 @@
         }
     });
 </script>
+
+{% include "static/js/watch.html" %}
 </body>
 </html>
