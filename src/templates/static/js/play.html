@@ -85,7 +85,8 @@
         (touches.clientX < videoWidth/2) ? rewindVideo() : forwardVideo();
     }
 
-    function hotkeysHandler(e){
+    function hotkeysHandler(event){
+        console.log(event.which);
         // 'f' key
         if (event.which === 70) {
             this.isFullscreen() ? this.exitFullscreen() : this.requestFullscreen();
@@ -99,8 +100,25 @@
             forwardVideo();
         }
         // <-- key
-        else if(event.which == 37){
+        else if(event.which === 37){
             rewindVideo();
+        }
+        // spacebar
+        else if(event.which === 32){
+            player.paused() ? player.play() : player.pause();
+        }
+        // 'c' key
+        else if(event.which === 67){
+            let tracks = player.textTracks();
+            for (let i = 0; i < tracks.length; i++) {
+                let track = tracks[i];
+                (track.mode === 'showing') ? track.mode = 'hidden' : track.mode = 'showing';
+            }
+        }
+        // 0-9 key
+        else if (event.which >= 48 && event.which <= 57){
+            var key = parseInt(event.which - 48);
+            player.currentTime(player.duration() / 10 * key);
         }
     }
 

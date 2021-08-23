@@ -24,6 +24,11 @@ def setup_logging():
     logging.basicConfig(handlers=[handler], level=logging.INFO, format='%(asctime)s %(levelname)s:[%(filename)s:%(lineno)d] %(message)s')
 
 def setup_database():
+    # TODO: Programmatically fetch all classes that inherit BaseModel
+    # models = peewee.Model.__subclasses__()
+    # print(type(models))
+    # for model in models:
+    #     print(model)
     database.create_tables([MovieModel, GenreModel, SubtitleModel, GenreMovieModel, UserModel, IpModel, WatchModel])
 
 def main():
