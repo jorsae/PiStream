@@ -7,8 +7,7 @@
     const player = videojs('videoPlayer', {
             userActions: {
                 doubleClick: doubleClickHandler,
-                hotkeys: hotkeysHandler,
-                touchstart: tapHandler
+                hotkeys: hotkeysHandler
             }
         });
     const notifications = document.querySelectorAll('.notification');
@@ -25,6 +24,8 @@
     
     window.onload = init;
     function init(){
+        player.on('touchstart', tapHandler);
+
         // Event handlers for forward/rewind animations
         notifications.forEach(function(notification){
             notification.addEventListener('animationend', animateNotificationOut);
@@ -62,18 +63,26 @@
     //Event Handlers
     function doubleClickHandler(e){
         const videoWidth = video.offsetWidth;
-        (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
+        (e.clientX < videoWidth/2) ? rewindVideo() : forwardVideo();
         e.preventDefault();
     }
 
     function tapHandler(e){
+        // TODO: It's inaccurate for phones when NOT in fullscreen. Fullscreen on phone should be accurate.
         if(!tapedTwice) {
             tapedTwice = true;
             setTimeout( function() { tapedTwice = false; }, 300 );
             return false;
         }
-        const videoWidth = video.offsetWidth;
-        (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
+        const videoWidth = player.currentDimensions().width;
+        // They all seem to be the same value. Might be 1px difference because of rounding.
+        // console.log('video.offsetWidth: ' + video.offsetWidth + '\tplayer: ' + videoWidth + '\tvideo.clientWidth: ' + video.clientWidth);
+        
+        var touches = e.touches[0];
+        // screenX seems to take the entire screen even when not used, so I don't think it should be used
+        // console.log('touches.screenX: ' + touches.screenX + '\ttouches.clientX ' + touches.clientX);
+        
+        (touches.clientX < videoWidth/2) ? rewindVideo() : forwardVideo();
     }
 
     function hotkeysHandler(e){
