@@ -1,5 +1,6 @@
 from __main__ import app
 from flask import request, render_template, jsonify
+import logging
 
 import constants
 import utility
@@ -45,4 +46,17 @@ def play():
 
 @app.route('/watching', methods=['GET', 'POST'])
 def watching():
-    return 'watching'
+    ip = request.remote_addr
+    try:
+        # << 	x IN y, where y is a list or query
+        user_id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
+        watching = WatchModel.select(WatchModel.movie_id).where(WatchModel.user_id == user_id)
+        movies = MovieModel.select().where(MovieModel.movie_id << watching)
+        UiMovies = []
+        for movie in movies:
+            UiMovies.append(UiMovie(movie.filename, movie.uuid, None))
+        return render_template('watching.html', movies=movies)
+    except Exception as e:
+        logging.error(e)
+
+    return render_template('watching.html')

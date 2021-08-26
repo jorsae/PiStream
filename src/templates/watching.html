@@ -7,9 +7,8 @@
 <body>
 {% include "static/html/menu.html" %}
 
+<h2>Currently watching</h2>
 <div class="movie-list">
-    <input id="search" name="search" type="text" placeholder="search"/>
-
     {% if movies %}
         <ol id="movieList">
         {% for movie in movies %}
