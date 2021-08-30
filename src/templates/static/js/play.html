@@ -103,6 +103,16 @@
         else if(event.which === 37){
             rewindVideo();
         }
+        // up key
+        else if(event.which === 38){
+            player.volume(player.volume() + (1/20));
+            event.preventDefault();
+        }
+        // down key
+        else if (event.which === 40){
+            player.volume(player.volume() - (1/20));
+            event.preventDefault();
+        }
         // spacebar
         else if(event.which === 32){
             player.paused() ? player.play() : player.pause();
