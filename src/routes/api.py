@@ -1,5 +1,7 @@
 from __main__ import app
 from flask import request, render_template, jsonify
+import logging
+import time
 
 import constants
 import utility
@@ -70,3 +72,24 @@ def watch():
         wm = WatchModel.replace(movie_id=movie_id, user_id=user_id, progress=progress).execute()
     
     return ''
+
+@app.route('/clearwatch', methods=['POST'])
+def clearwatch():
+    ip = request.remote_addr
+    json = request.json
+    movie_uuid = json['m']
+    try:
+        user_id = IpModel.select(IpModel.user_id).where(IpModel.ip == ip).scalar()
+        movie_id = MovieModel.select(MovieModel.movie_id).where(MovieModel.uuid == movie_uuid).scalar()
+        (WatchModel
+            .delete()
+            .where(
+                (WatchModel.user_id == user_id) &
+                (WatchModel.movie_id == movie_id)
+                )
+            .execute()
+        )
+        return movie_uuid
+    except Exception as e:
+        logging.error(e)
+        return '', 500

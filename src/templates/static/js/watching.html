@@ -2,15 +2,34 @@
     window.onload = init;
     function init(){
         var watchList = document.getElementsByClassName("watch-list");
-        console.log(watchList.length);
         for(var i = 0; i < watchList.length; i++){
             watchList[i].onclick = function(){ watchClick(this); }
         }
     }
 
     function watchClick(e){
-        console.log("watchClick");
-        console.log(e.value);
+        var watchData = {
+            'm': e.value,
+        }
+        jsonData = JSON.stringify(watchData);
+        var url = "http://" + window.location.hostname + ":3000/clearwatch";
+        e.disabled = true;
+        postRequest(url, jsonData, callbackWatch);
+    }
+
+    function callbackWatch(response){
+        var watchList = document.getElementsByClassName("watch-list");
+        for(var i = 0; i < watchList.length; i++){
+            if(watchList[i].value === response.responseText){
+                if(response.status === 200){
+                    var parent = watchList[i].parentElement;
+                    parent.parentElement.removeChild(parent);
+                }
+                else{
+                    watchList[i].disabled = false;
+                }
+            }
+        }
     }
 
     function postRequest(url, object, callback, async = true) {
