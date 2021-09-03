@@ -2,7 +2,6 @@
 <html>
 <head>
     {% include "static/html/head.html" %}
-    {% include "static/js/search.html" %}
 </head>
 <body>
 {% include "static/html/menu.html" %}
@@ -14,6 +13,7 @@
         {% for movie in movies %}
             <li>
                 <a href={{ url_for("play", v=movie.uuid) }}>{{ movie.filename }} {{ movie.genre }}</a>
+                <button class="watch-list" value="{{ movie.uuid }}">Clear</button>
             </li>
         {% endfor %}
         </ol>
@@ -21,5 +21,7 @@
         <p>No Movies. Admin need to re-index</p>
     {% endif %}
 </div>
+
+{% include "static/js/watching.html" %}
 </body>
 </html>

@@ -1,0 +1,30 @@
+<script>
+    window.onload = init;
+    function init(){
+        var watchList = document.getElementsByClassName("watch-list");
+        console.log(watchList.length);
+        for(var i = 0; i < watchList.length; i++){
+            watchList[i].onclick = function(){ watchClick(this); }
+        }
+    }
+
+    function watchClick(e){
+        console.log("watchClick");
+        console.log(e.value);
+    }
+
+    function postRequest(url, object, callback, async = true) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                callback(xhttp);
+            }
+        }
+        xhttp.open("POST", url, async);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        if (object == null || object == undefined)
+            xhttp.send();
+        else
+            xhttp.send(object);
+    }
+</script>
