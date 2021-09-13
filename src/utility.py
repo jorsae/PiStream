@@ -25,11 +25,15 @@ def index_movies(start_folder):
         for f in files:
             f = folder + f
             (walk if os.path.isdir(f) else allFiles).append(f)
+
             filename = os.path.basename(f)
             ext = filename[-4:]
             filename = filename[:-4]
             
             if ext in constants.VIDEO_FORMATS:
+                query = MovieModel.select().where(MovieModel.filepath == f)
+                if query.exists():
+                    continue
                 m, created = MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
                 if created:
                     logging.info(f'Added movie: {f}')
@@ -52,6 +56,10 @@ def index_subtitles(start_folder):
             filename = filename[:-4]
             
             if ext in constants.SUBTITLE_FORMATS:
+                query = SubtitleModel.select().where(SubtitleModel.filepath == f)
+                if query.exists():
+                    continue
+
                 try:
                     iso, language = get_language_from_extension(filename)
                     if language is not None:
