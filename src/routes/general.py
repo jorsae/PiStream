@@ -13,7 +13,6 @@ def play():
     try:
         movie = MovieModel.select().where(MovieModel.uuid == uuid)[0]
         subtitles = SubtitleModel.select().where(SubtitleModel.movie_id == movie.movie_id)
-        print(len(subtitles))
 
         next = MovieModel.select().where(MovieModel.movie_id == (movie.movie_id + 1))
         if len(next) > 0:
