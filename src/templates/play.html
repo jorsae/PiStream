@@ -23,8 +23,10 @@
     </div>
     <video id="videoPlayer" class="video-player video-js" data-setup='{"fluid": true}' controls>
         <source src="{{ movie.filepath }}" type="video/mp4">
-        {% if sub %}
-        <track label="{{ sub.language }}" srclang="{{ sub.srclang }}" kind="subtitles" src="{{ sub.filepath }}" default>
+        {% if subtitles %}
+            {% for sub in subtitles %}
+                <track label="{{ sub.language }}" srclang="{{ sub.srclang }}" kind="subtitles" src="{{ sub.filepath }}" default>
+            {% endfor %}
         {% endif %}
     </video>
 

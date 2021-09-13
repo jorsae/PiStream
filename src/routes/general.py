@@ -13,6 +13,7 @@ def play():
     try:
         movie = MovieModel.select().where(MovieModel.uuid == uuid)[0]
         subtitles = SubtitleModel.select().where(SubtitleModel.movie_id == movie.movie_id)
+        print(len(subtitles))
 
         next = MovieModel.select().where(MovieModel.movie_id == (movie.movie_id + 1))
         if len(next) > 0:
@@ -37,7 +38,7 @@ def play():
                             ).scalar()
 
         if len(subtitles) > 0:
-            return render_template('play.html', movie=movie, sub=subtitles[0], watch_progress=watch_progress, next=next, previous=previous)
+            return render_template('play.html', movie=movie, subtitles=subtitles, watch_progress=watch_progress, next=next, previous=previous)
         else:
             return render_template('play.html', movie=movie, watch_progress=watch_progress, next=next, previous=previous)
     except Exception as e:
