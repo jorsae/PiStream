@@ -34,7 +34,7 @@ def index_movies(start_folder):
                 query = MovieModel.select().where(MovieModel.filepath == f)
                 if query.exists():
                     continue
-                m, created = MovieModel.get_or_create(filepath=f, showname=filename, filename=filename, extension=ext)
+                m, created = MovieModel.get_or_create(filepath=f, filename=filename, extension=ext)
                 if created:
                     logging.info(f'Added movie: {f}')
                     movies += 1

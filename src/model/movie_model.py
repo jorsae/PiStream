@@ -5,7 +5,6 @@ import uuid
 class MovieModel(BaseModel):
     movie_id = AutoField()
     uuid = TextField(default=uuid.uuid4)
-    showname = TextField()
     filepath = TextField()
     filename = TextField()
     extension = TextField()

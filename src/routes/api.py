@@ -32,7 +32,7 @@ def search():
     elif searchType == 'genre':
         movies = utility.get_movies_by_genre(search)
     else:
-        movies = utility.get_movies_by_search(MovieModel.showname, search)
+        movies = utility.get_movies_by_search(MovieModel.filename, search)
     
     ui_movies = []
     for m in movies:
