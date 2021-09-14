@@ -19,12 +19,14 @@
     }
 
     function searchUpdate(){
+        console.log("searchupdate");
         clearTimeout(keyTimer);
         keyTimer = setTimeout(search, 300);
     }
 
     function search(){
         var url = "http://" + window.location.hostname + ":3000/search?search=" + document.getElementById("search").value;
+        url += "&searchType=" + document.getElementById("searchType").value;
         getRequest(url, searchResult);
     }
 
@@ -53,5 +55,8 @@
     function init(){
         searchElement = document.getElementById("search");
         searchElement.addEventListener('input', searchUpdate);
+        
+        selectElement = document.getElementById("searchType");
+        selectElement.addEventListener('change', search);
     }
 </script>

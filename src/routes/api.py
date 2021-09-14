@@ -24,13 +24,18 @@ def index(page):
 @app.route('/search', methods=['GET'])
 def search():
     search = request.args.get('search')
-    query = (MovieModel
-                .select()
-                .where(MovieModel.showname.contains(search))
-            )
+    searchType = request.args.get('searchType')
 
+    movies = []
+    if searchType == 'path':
+        movies = utility.get_movies_by_search(MovieModel.filepath, search)
+    elif searchType == 'genre':
+        movies = utility.get_movies_by_genre(search)
+    else:
+        movies = utility.get_movies_by_search(MovieModel.showname, search)
+    
     ui_movies = []
-    for m in query:
+    for m in movies:
         ui_movies.append(UiMovie(m.filename, m.uuid, None))
     return jsonify([m.__dict__ for m in ui_movies])
 

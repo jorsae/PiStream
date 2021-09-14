@@ -97,6 +97,26 @@ def get_movie_genres(movie_id):
             g.append(gg[0].genre)
     return g
 
+# Get all movies with genre:
+def get_movies_by_genre(search):
+    try:
+        genre_id = GenreModel.select(GenreModel.genre_id).where(GenreModel.genre ** search).scalar()
+        movies = GenreMovieModel.select(GenreMovieModel.movie_id).where(GenreMovieModel.genre_id == genre_id)
+        return MovieModel.select().where(MovieModel.movie_id << movies)
+    except Exception as e:
+        logging.error(e)
+        return []
+
+def get_movies_by_search(searchField, search):
+    try:
+        return (MovieModel
+                .select()
+                .where(searchField.contains(search))
+                )
+    except Exception as e:
+        logging.error(e)
+        return []
+
 def get_language_from_subtitles(f):
     try:
         data = open(f, 'r', encoding='iso_8859_1').read()

@@ -8,6 +8,11 @@
 {% include "static/html/menu.html" %}
 
 <div class="movie-list">
+    <select name="search_type" id="searchType">
+        <option value="title">Title</option>
+        <option value="path">Path</option>
+        <option value="genre">Genre</option>
+    </select>
     <input id="search" name="search" type="text" placeholder="search"/>
 
     {% if movies %}
