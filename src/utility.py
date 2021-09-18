@@ -89,6 +89,7 @@ def ensure_exists():
                 deleted_movies += MovieModel.delete().where(MovieModel.movie_id == movie.movie_id).execute()
                 deleted_subs += SubtitleModel.delete().where(SubtitleModel.movie_id == movie.movie_id).execute()
                 wm = WatchModel.delete().where(WatchModel.movie_id == movie.movie_id).execute()
+        # TODO: Do the same for subtitles
         return deleted_movies, deleted_subs
     except Exception as e:
         logging.error(e)
