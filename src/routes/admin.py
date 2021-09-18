@@ -17,6 +17,10 @@ def admin():
         if purge:
             movies, subs = utility.purge_database()
             output = f'Deleted: {movies} movies, with {subs} subtitles.'
+        ensure_exists = request.form.get('ensure-exists')
+        if ensure_exists:
+            movies, subs = utility.ensure_exists()
+            output = f'Found: {movies} deleted movies and {subs} deleted subtitles.'
 
     return render_template("admin.html", output=output)
 

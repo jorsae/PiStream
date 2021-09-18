@@ -77,6 +77,23 @@ def index_subtitles(start_folder):
                     logging.error(f'{f}: {e}')
     return subs
 
+# Remove all files in database that has been removed
+def ensure_exists():
+    deleted_movies = 0
+    deleted_subs = 0
+    try:
+        movies = MovieModel.select()
+        for movie in movies:
+            if os.path.isfile(movie.filepath) is False:
+                # TODO: Make this delete on cascade, so I don't have to fetch id everytime
+                deleted_movies += MovieModel.delete().where(MovieModel.movie_id == movie.movie_id).execute()
+                deleted_subs += SubtitleModel.delete().where(SubtitleModel.movie_id == movie.movie_id).execute()
+                wm = WatchModel.delete().where(WatchModel.movie_id == movie.movie_id).execute()
+        return deleted_movies, deleted_subs
+    except Exception as e:
+        logging.error(e)
+        return None, None
+
 # Delete all tables
 def purge_database():
     movies = MovieModel.select(fn.COUNT(MovieModel)).scalar()
