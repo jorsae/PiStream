@@ -16,7 +16,7 @@
         {% if previous %}
         <a href={{ url_for("play", v=previous.uuid) }}>Previous</a>
         {% endif %}
-        
+        <button id="fullscreen">Fullscreen</button>
         {% if next %}
         <a href={{ url_for("play", v=next.uuid) }}>Next</a>
         {% endif %}

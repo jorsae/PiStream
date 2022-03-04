@@ -36,7 +36,12 @@
             watchProgressTimer = setInterval(watchProgress, watchProgressInterval);
         }
 
+        // Load watch progress
         player.currentTime(loadedWatchProgress);
+
+
+        var fullscreen = document.getElementById("fullscreen");
+        fullscreen.onclick += fullscreen_click;
     }
 
     /***************************
@@ -172,6 +177,17 @@
     function callbackWatch(response){
         if(response.status !== 200){
             clearInterval(watchProgressTimer);
+        }
+    }
+
+    function fullscreen_click(e){
+        var videoContainer = document.getElementsByClassName("video-container")[0];
+        var videoWidth = videoContainer.style.width;
+        if (videoWidth === "100%"){
+            videoContainer.style.width = "70%";
+        }
+        else{
+            videoContainer.style.width = "100%";
         }
     }
 </script>
